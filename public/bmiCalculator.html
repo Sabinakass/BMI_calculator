@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">BMI Calculator</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-2">
+
+    
+        <form id="bmiForm" action="/bmicalculator" method="post">
+            <div class="form-group">
+                <label for="unit">Unit:</label>
+                <select class="form-control" id="unit">
+                    <option value="Metric">Metric (cm, kg)</option>
+                    <option value="Imperial">Imperial (inches, pounds)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="height">Height:</label>
+                <input type="number" class="form-control" name="height" placeholder="Height in cm or inches" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Weight:</label>
+                <input type="number" class="form-control" name="weight" placeholder="Weight in kg or pounds" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" class="form-control" id="age" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select class="form-control" id="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Calculate BMI</button>
+        </form>
+        <button type="button" class="btn btn-primary mt-2" id="viewHistoryBtn">View BMI History</button>
+        <div id="bmiHistory" class="mt-4"></div>
+        
+    </div>
+   
+
+<script>
+    function fetchAndDisplayHistory() {
+        fetch('/bmiHistory')
+            .then(response => response.json())
+            .then(history => {
+                const historyDiv = document.getElementById('bmiHistory');
+                historyDiv.innerHTML = '<h3>BMI History</h3>';
+                history.forEach(entry => {
+                    historyDiv.innerHTML += `<p>${entry.timestamp}: BMI - ${entry.bmi} (${entry.category})</p>`;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    document.getElementById('viewHistoryBtn').addEventListener('click', function() {
+        fetchAndDisplayHistory();
+    });
+</script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+</body>
+</html>
